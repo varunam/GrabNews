@@ -1,5 +1,7 @@
 package com.grab.news.app.ui.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,12 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.grab.news.app.R;
 import com.grab.news.app.repository.News;
 import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
@@ -59,6 +66,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         
         Glide.with(holder.itemView.getContext())
                 .load(news.getUrlToImage())
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        e.printStackTrace();
+                        return false;
+                    }
+    
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        Log.d(TAG, "onResourceReady: Image loaded");
+                        return false;
+                    }
+                })
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.ic_error)
                 .into(holder.newsImage);

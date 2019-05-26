@@ -16,7 +16,7 @@ import java.util.List;
 @Dao
 public interface NewsDao {
     
-    @Query("SELECT * FROM news_headlines")
+    @Query("SELECT * FROM news_headlines ORDER BY publishedAt DESC")
     LiveData<List<News>> loadHeadlines();
     
     @Insert(onConflict = OnConflictStrategy.REPLACE)
