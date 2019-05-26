@@ -3,20 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.grab.news.app">
 
-    <uses-permission
-        android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
+        android:appComponentFactory="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:appComponentFactory"
-        android:appComponentFactory="@string/app_name">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:appComponentFactory">
+        <activity android:name=".ui.activities.WebViewActivity"></activity>
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

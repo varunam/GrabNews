@@ -1,5 +1,6 @@
 package com.grab.news.app.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +18,14 @@ import com.grab.news.app.repository.Source;
 import com.grab.news.app.repository.local.LocalNewsDatabase;
 import com.grab.news.app.ui.MainViewModel;
 import com.grab.news.app.ui.adapter.NewsAdapter;
+import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
 import com.grab.news.app.viewmodels.ViewModelProvidersFactory;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NewsClickedCallbacks {
     
     private static final String TAG = MainActivity.class.getSimpleName();
     private MainViewModel mainViewModel;
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     
     private void init() {
         recyclerView = findViewById(R.id.news_rv_id);
-        newsAdapter = new NewsAdapter();
+        newsAdapter = new NewsAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(newsAdapter);
         
@@ -102,5 +104,12 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
         } else
             progressBar.setVisibility(View.GONE);
+    }
+    
+    @Override
+    public void onNewsItemClicked(News clickedNews, int position) {
+        Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.FULL_NEWS_URL, clickedNews.getUrl());
+        startActivity(intent);
     }
 }

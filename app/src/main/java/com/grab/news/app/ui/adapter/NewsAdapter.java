@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.grab.news.app.R;
 import com.grab.news.app.repository.News;
+import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
 
 import java.util.List;
 
@@ -26,9 +28,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private static final String TAG = NewsAdapter.class.getSimpleName();
     
     private List<News> newsList;
+    private NewsClickedCallbacks newsClickedCallbacks;
     
     @Inject
     public RequestManager glide;
+    
+    public NewsAdapter(NewsClickedCallbacks newsClickedCallbacks){
+        this.newsClickedCallbacks = newsClickedCallbacks;
+    }
     
     public void setNewsList(List<News> newsList) {
         this.newsList = newsList;
@@ -43,8 +50,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
     
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        News news = newsList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        final News news = newsList.get(position);
         
         holder.title.setText(news.getTitle());
         holder.author.setText(news.getAuthor());
@@ -55,6 +62,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.ic_error)
                 .into(holder.newsImage);
+        
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newsClickedCallbacks.onNewsItemClicked(news, position);
+            }
+        });
     }
     
     @Override
@@ -69,10 +83,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         
         private ImageView newsImage;
         private TextView author, publishedDate, title;
+        private CardView cardView;
         
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             
+            cardView = itemView.findViewById(R.id.cvNewsItemId);
             newsImage = itemView.findViewById(R.id.ivNewsImage);
             author = itemView.findViewById(R.id.tvNewsAuthor);
             publishedDate = itemView.findViewById(R.id.tvListItemDateTime);
