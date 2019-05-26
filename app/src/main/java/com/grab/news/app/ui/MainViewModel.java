@@ -18,9 +18,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by varun.am on 2019-05-22
@@ -51,26 +51,38 @@ public class MainViewModel extends AndroidViewModel {
     private void loadDataFromRemote() {
         NewsRepository.getApiClient().create(NewsService.class)
                 .getNews(BuildConfig.API_KEY)
-                .enqueue(new Callback<ApiResponse>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                        Log.d(TAG, "onResponse: " + response.body().articles);
-                        Log.d(TAG, "onResponse: " + response.body().newsList.size());
-                        for (News news : response.body().newsList) {
-                            LocalNewsDatabase.getInstance(getApplication().getApplicationContext())
-                                    .newsDao()
-                                    .insertNews(news);
-                        }
-                    }
-                    
-                    @Override
-                    public void onFailure(Call<ApiResponse> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+                .toObservable()
+                .subscribeOn(Schedulers.io())
+                .subscribe(apiResponseObserver);
     }
     
     public LiveData<List<News>> getNewsList() {
         return newsList;
     }
+    
+    private Observer<? super ApiResponse> apiResponseObserver = new Observer<ApiResponse>() {
+        @Override
+        public void onSubscribe(Disposable d) {
+        
+        }
+        
+        @Override
+        public void onNext(ApiResponse apiResponse) {
+            for (News news : apiResponse.newsList) {
+                LocalNewsDatabase.getInstance(getApplication().getApplicationContext())
+                        .newsDao()
+                        .insertNews(news);
+            }
+        }
+        
+        @Override
+        public void onError(Throwable e) {
+            Log.e(TAG, "onError: Error", e);
+        }
+        
+        @Override
+        public void onComplete() {
+        
+        }
+    };
 }

@@ -2,7 +2,7 @@ package com.grab.news.app.repository.remote;
 
 import com.grab.news.app.repository.ApiResponse;
 
-import retrofit2.Call;
+import io.reactivex.Flowable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 public interface NewsService {
     
     @GET("top-headlines?country=in")
-    Call<ApiResponse> getNews(
+    Flowable<ApiResponse> getNews(
             @Query("apiKey") String apiKey
     );
     
