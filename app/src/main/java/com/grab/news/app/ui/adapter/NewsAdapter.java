@@ -23,6 +23,7 @@ import javax.inject.Inject;
  * Created by varun.am on 2019-05-25
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
+    private static final String TAG = NewsAdapter.class.getSimpleName();
     
     private List<News> newsList;
     
@@ -52,6 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(news.getUrlToImage())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.ic_error)
                 .into(holder.newsImage);
     }
     

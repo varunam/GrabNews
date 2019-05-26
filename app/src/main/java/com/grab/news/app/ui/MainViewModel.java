@@ -7,12 +7,20 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.grab.news.app.BuildConfig;
+import com.grab.news.app.repository.ApiResponse;
 import com.grab.news.app.repository.News;
 import com.grab.news.app.repository.local.LocalNewsDatabase;
+import com.grab.news.app.repository.remote.NewsRepository;
+import com.grab.news.app.repository.remote.NewsService;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by varun.am on 2019-05-22
@@ -27,11 +35,39 @@ public class MainViewModel extends AndroidViewModel {
     @Inject
     public MainViewModel(@NonNull Application application) {
         super(application);
+        
         Log.d(TAG, "MainViewModel: created");
+        
+        //loading data from remote
+        loadDataFromRemote();
+        
+        //load data from cache to ui
         localNewsDatabase = LocalNewsDatabase.getInstance(application.getApplicationContext());
         newsList = localNewsDatabase.newsDao().loadHeadlines();
         if (newsList.getValue() != null)
             Log.d(TAG, "MainViewModel: news headlines retrieved: " + newsList.getValue().size());
+    }
+    
+    private void loadDataFromRemote() {
+        NewsRepository.getApiClient().create(NewsService.class)
+                .getNews(BuildConfig.API_KEY)
+                .enqueue(new Callback<ApiResponse>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                        Log.d(TAG, "onResponse: " + response.body().articles);
+                        Log.d(TAG, "onResponse: " + response.body().newsList.size());
+                        for (News news : response.body().newsList) {
+                            LocalNewsDatabase.getInstance(getApplication().getApplicationContext())
+                                    .newsDao()
+                                    .insertNews(news);
+                        }
+                    }
+                    
+                    @Override
+                    public void onFailure(Call<ApiResponse> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
     }
     
     public LiveData<List<News>> getNewsList() {

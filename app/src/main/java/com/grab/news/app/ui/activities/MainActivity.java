@@ -2,6 +2,8 @@ package com.grab.news.app.ui.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -9,14 +11,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.grab.news.app.BuildConfig;
 import com.grab.news.app.R;
-import com.grab.news.app.repository.ApiResponse;
 import com.grab.news.app.repository.News;
 import com.grab.news.app.repository.Source;
 import com.grab.news.app.repository.local.LocalNewsDatabase;
-import com.grab.news.app.repository.remote.NewsRepository;
-import com.grab.news.app.repository.remote.NewsService;
 import com.grab.news.app.ui.MainViewModel;
 import com.grab.news.app.ui.adapter.NewsAdapter;
 import com.grab.news.app.viewmodels.ViewModelProvidersFactory;
@@ -24,10 +22,6 @@ import com.grab.news.app.viewmodels.ViewModelProvidersFactory;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     
@@ -37,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     
     //views
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
     
     @Inject
     ViewModelProvidersFactory viewModelProvidersFactory;
@@ -47,28 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         
         init();
-        
         //addDummyData();
-        
-        NewsRepository.getApiClient().create(NewsService.class)
-                .getNews(BuildConfig.API_KEY)
-                .enqueue(new Callback<ApiResponse>() {
-                    @Override
-                    public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                        Log.d(TAG, "onResponse: " + response.body().articles);
-                        Log.d(TAG, "onResponse: " + response.body().newsList.size());
-                        for (News news : response.body().newsList) {
-                            LocalNewsDatabase.getInstance(getApplicationContext())
-                                    .newsDao()
-                                    .insertNews(news);
-                        }
-                    }
-                    
-                    @Override
-                    public void onFailure(Call<ApiResponse> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
         
     }
     
@@ -107,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(newsAdapter);
         
+        progressBar = findViewById(R.id.progress_bar_id);
+        showLoader(true);
+        
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mainViewModel.getNewsList().observe(this, newsListObserver);
     }
@@ -114,9 +91,16 @@ public class MainActivity extends AppCompatActivity {
     private Observer<List<News>> newsListObserver = new Observer<List<News>>() {
         @Override
         public void onChanged(List<News> news) {
+            showLoader(false);
             Log.d(TAG, "onChanged: Observed changes in db");
-            
             newsAdapter.setNewsList(news);
         }
     };
+    
+    private void showLoader(boolean show) {
+        if(show){
+            progressBar.setVisibility(View.VISIBLE);
+        } else
+            progressBar.setVisibility(View.GONE);
+    }
 }
