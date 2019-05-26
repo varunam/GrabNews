@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NewsClickedCallba
         progressBar = findViewById(R.id.progress_bar_id);
         showLoader(true);
         
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainViewModel = ViewModelProviders.of(this, viewModelProvidersFactory).get(MainViewModel.class);
         mainViewModel.getNewsList().observe(this, newsListObserver);
     }
     
