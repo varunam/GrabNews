@@ -3,7 +3,7 @@ package com.grab.news.app.di.main;
 import androidx.lifecycle.ViewModel;
 
 import com.grab.news.app.di.ViewModelKey;
-import com.grab.news.app.ui.MainViewModel;
+import com.grab.news.app.ui.main.MainViewModel;
 
 import dagger.Binds;
 import dagger.Module;

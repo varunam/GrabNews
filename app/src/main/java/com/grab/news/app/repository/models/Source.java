@@ -1,4 +1,4 @@
-package com.grab.news.app.repository;
+package com.grab.news.app.repository.models;
 
 /**
  * Created by varun.am on 2019-05-25

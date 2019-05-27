@@ -1,4 +1,4 @@
-package com.grab.news.app.base;
+package com.grab.news.app;
 
 
 import com.grab.news.app.di.DaggerAppComponent;

@@ -1,7 +1,7 @@
 package com.grab.news.app.di;
 
 import com.grab.news.app.di.main.MainViewModelsModule;
-import com.grab.news.app.ui.activities.MainActivity;
+import com.grab.news.app.ui.main.MainActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

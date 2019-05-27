@@ -1,4 +1,4 @@
-package com.grab.news.app.ui;
+package com.grab.news.app.ui.main;
 
 import android.app.Application;
 import android.util.Log;
@@ -8,8 +8,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.grab.news.app.BuildConfig;
-import com.grab.news.app.repository.ApiResponse;
-import com.grab.news.app.repository.News;
+import com.grab.news.app.repository.models.ApiResponse;
+import com.grab.news.app.repository.models.News;
 import com.grab.news.app.repository.local.LocalNewsDatabase;
 import com.grab.news.app.repository.remote.NewsRepository;
 import com.grab.news.app.repository.remote.NewsService;

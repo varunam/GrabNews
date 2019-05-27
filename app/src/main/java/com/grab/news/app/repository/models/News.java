@@ -1,4 +1,4 @@
-package com.grab.news.app.repository;
+package com.grab.news.app.repository.models;
 
 import androidx.annotation.Nullable;
 import androidx.room.Embedded;

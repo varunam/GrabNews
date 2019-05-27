@@ -1,4 +1,4 @@
-package com.grab.news.app.repository;
+package com.grab.news.app.repository.models;
 
 import com.google.gson.annotations.SerializedName;
 

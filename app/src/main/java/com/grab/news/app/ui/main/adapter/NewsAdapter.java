@@ -1,4 +1,4 @@
-package com.grab.news.app.ui.adapter;
+package com.grab.news.app.ui.main.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,8 +17,8 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.grab.news.app.R;
-import com.grab.news.app.repository.News;
-import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
+import com.grab.news.app.repository.models.News;
+import com.grab.news.app.ui.main.NewsClickedCallbacks;
 
 import java.util.List;
 

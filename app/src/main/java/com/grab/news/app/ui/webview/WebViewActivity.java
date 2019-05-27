@@ -1,4 +1,4 @@
-package com.grab.news.app.ui.activities;
+package com.grab.news.app.ui.webview;
 
 import android.os.Bundle;
 import android.view.MenuItem;

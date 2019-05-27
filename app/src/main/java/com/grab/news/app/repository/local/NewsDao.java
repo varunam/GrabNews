@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.grab.news.app.repository.News;
+import com.grab.news.app.repository.models.News;
 
 import java.util.List;
 

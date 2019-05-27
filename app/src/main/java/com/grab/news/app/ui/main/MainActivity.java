@@ -1,4 +1,4 @@
-package com.grab.news.app.ui.activities;
+package com.grab.news.app.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.grab.news.app.R;
-import com.grab.news.app.repository.News;
-import com.grab.news.app.repository.Source;
+import com.grab.news.app.repository.models.News;
+import com.grab.news.app.repository.models.Source;
 import com.grab.news.app.repository.local.LocalNewsDatabase;
-import com.grab.news.app.ui.MainViewModel;
-import com.grab.news.app.ui.adapter.NewsAdapter;
-import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
+import com.grab.news.app.ui.webview.WebViewActivity;
+import com.grab.news.app.ui.main.adapter.NewsAdapter;
 import com.grab.news.app.utils.NetworkUtils;
 import com.grab.news.app.viewmodels.ViewModelProviderFactory;
 

@@ -1,6 +1,6 @@
 package com.grab.news.app.repository.remote;
 
-import com.grab.news.app.repository.ApiResponse;
+import com.grab.news.app.repository.models.ApiResponse;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;

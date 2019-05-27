@@ -2,7 +2,7 @@ package com.grab.news.app.di;
 
 import android.app.Application;
 
-import com.grab.news.app.base.BaseApplication;
+import com.grab.news.app.BaseApplication;
 
 import javax.inject.Singleton;
 
