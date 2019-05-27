@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.grab.news.app.R;
 import com.grab.news.app.repository.News;
 import com.grab.news.app.repository.Source;
@@ -19,7 +20,8 @@ import com.grab.news.app.repository.local.LocalNewsDatabase;
 import com.grab.news.app.ui.MainViewModel;
 import com.grab.news.app.ui.adapter.NewsAdapter;
 import com.grab.news.app.ui.callbacks.NewsClickedCallbacks;
-import com.grab.news.app.viewmodels.ViewModelProvidersFactory;
+import com.grab.news.app.utils.NetworkUtils;
+import com.grab.news.app.viewmodels.ViewModelProviderFactory;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NewsClickedCallba
     private ProgressBar progressBar;
     
     @Inject
-    ViewModelProvidersFactory viewModelProvidersFactory;
+    ViewModelProviderFactory viewModelProvidersFactory;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,24 @@ public class MainActivity extends AppCompatActivity implements NewsClickedCallba
         init();
         //addDummyData();
         
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkInternetConnection();
+    }
+    
+    private void checkInternetConnection() {
+        if (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
+            Snackbar.make(findViewById(R.id.news_rv_id), R.string.internet_not_available, Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            checkInternetConnection();
+                        }
+                    }).show();
+        }
     }
     
     private void addDummyData() {
@@ -93,14 +113,15 @@ public class MainActivity extends AppCompatActivity implements NewsClickedCallba
     private Observer<List<News>> newsListObserver = new Observer<List<News>>() {
         @Override
         public void onChanged(List<News> news) {
-            showLoader(false);
-            Log.d(TAG, "onChanged: Observed changes in db");
+            if (news.size() > 0)
+                showLoader(false);
+            Log.d(TAG, "onChanged: Observed changes in db: " + news.size());
             newsAdapter.setNewsList(news);
         }
     };
     
     private void showLoader(boolean show) {
-        if(show){
+        if (show) {
             progressBar.setVisibility(View.VISIBLE);
         } else
             progressBar.setVisibility(View.GONE);

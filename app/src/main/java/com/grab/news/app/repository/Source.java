@@ -12,6 +12,10 @@ public class Source {
         this.name = name;
     }
     
+    public Source(){
+    
+    }
+    
     public String getId() {
         return id;
     }

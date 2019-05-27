@@ -8,5 +8,7 @@
 
     <!-- Empty -->
     <string name="no_news">No News</string>
+    <string name="you_are_online">You are online!</string>
+    <string name="internet_not_available">You seem to be offline!</string>
 
 </resources>
